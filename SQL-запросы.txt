@@ -1,0 +1,1062 @@
+ДОМАШКА 1.........................................................................................................
+SELECT * FROM users WHERE user_email = 'houston42@gmail.com';
+SELECT * FROM student WHERE user_id = 44133;
+SELECT * FROM subject WHERE subject_id = 8;
+SELECT * FROM teacher WHERE group_id = 80;
+SELECT
+   DISTINCT education_form
+FROM
+   student 
+WHERE user_id = 12203;
+
+
+
+CREATE TABLE salary ( 
+    teacher_id  INTEGER,
+    salary_amt  NUMERIC(16,2),
+    salary_val  CHAR(3)
+);
+
+CREATE TABLE rooms ( 
+    room_id  INTEGER,
+    teacher_id   INTEGER,
+    floor_num  INTEGER
+);
+
+INSERT INTO salary (teacher_id, salary_amt, salary_val)
+VALUES
+(965, 70000, 'RUR'),
+(29091,100000, 'RUR'),
+(29410, 1000, 'EUR'),
+(33576, 1800, 'USD'),
+(33902, 1200, 'EUR');
+
+INSERT INTO rooms (room_id, teacher_id, floor_num)
+VALUES
+(1, 965, 1),
+(2,29091, 1),
+(3, 29410, 1),
+(10, 33576, 2),
+(11, 33902, 2);
+
+SELECT * FROM rooms WHERE floor_num = 2;
+SELECT * FROM salary WHERE salary_val = 'EUR';
+
+
+SELECT * FROM users;
+
+--создание колонки
+SELECT user_id,
+    user_email AS mail,
+	subject_id
+FROM users;
+
+УРОК 2................................................................................................
+
+SELECT * FROM student;
+--ss1 AS
+SELECT user_id,
+    level AS mailru,
+	subject_id
+FROM student;
+
+--ss2  OR(или)
+SELECT * 
+FROM users
+WHERE subject_id=1
+     OR subject_id=5
+	 
+--ss3 AND(И)	 
+SELECT * 
+FROM student
+WHERE level='Elementary'
+      AND education_form='personal';
+--ss3 AND(И)+1	 
+SELECT * 
+FROM student
+WHERE level='Elementary'
+      AND education_form='personal'	  
+	  AND subject_id=1;
+
+--ss3 OR + AND
+SELECT * 
+FROM student
+WHERE (level='Elementary' AND education_form='personal')	
+        OR (level='Intermediate' AND education_form='personal');
+
+--ss4 IN
+SELECT * 
+FROM users
+WHERE subject_id IN (1,3,5);
+
+--ss5 NOT(не)
+SELECT * 
+FROM users
+WHERE subject_id NOT IN (1,3,5);
+
+--ss6 BETWEEN
+SELECT * 
+FROM users
+WHERE subject_id BETWEEN 1 AND 3;
+
+
+Вставить, изменить и удалить
+
+SELECT * FROM subject;
+SELECT * FROM subject WHERE subject_id=1;
+
+--ss7 INSERT
+INSERT INTO subject (subject_id, subject_title)
+VALUES (4, 'Chemistry');
+
+--ss8 UPDATE
+UPDATE subject
+SET subject_title = 'Spanish'
+WHERE subject_id = 1;
+
+
+--ss9 DELETE
+DELETE
+FROM subject
+WHERE subject_id = 4;
+
+ДОМАШКА 2............................................................................................................
+
+--Выведите уровень студента с id = 9651. При этом задайте алиас (псевдоним) для колонки как stud_level, 
+--а для таблицы — s.
+SELECT level AS stud_level, user_id
+FROM student AS S
+WHERE user_id = 9651;
+
+--Выведите email учителей с id 30019 и 31433 (в одном запросе)
+SELECT teacher_id, email
+FROM teacher
+WHERE teacher_id = 30019 OR teacher_id = 31433;
+
+--Выведите данные о пользователях с уровнем Advanced, занимающихся в группах (group), и о пользователях с уровнем 
+--Upper-Intermediate, занимающихся индивидуально (personal)
+SELECT *
+FROM student
+WHERE (level = 'Advanced' AND education_form='group')
+     OR (level = 'Upper-Intermediate' AND education_form='personal');
+
+--Выведите данные об учителях из групп от 180 до 190 (group_id).
+SELECT *
+FROM teacher
+WHERE group_id BETWEEN 180 AND 190;
+
+--Выведите данные о пользователях, у которых email заканчивается на yahoo.com
+SELECT * 
+FROM users 
+WHERE user_email LIKE '%yahoo.com';
+
+--Добавьте в таблицу subject новый предмет — Chinese (выберите id, равное 16 или следующее по порядку).
+INSERT INTO subject (subject_id, subject_title)
+VALUES (17, 'Chinese');
+
+
+--Обновите данные учителя с id 5562. У него изменилась почта с cold@gmail.com на cold5562@gmail.com.
+UPDATE teacher
+SET email = 'Sdlm2000@gmail.com'
+WHERE teacher_id = 5562;
+после обновления проверяем
+SELECT * FROM teacher WHERE teacher_id = 5562;
+
+Доп.часть домащки.................................................................
+Шаг 1
+
+Создайте таблицы в БД и заполните их данными.
+Посты (posts)
+CREATE TABLE posts ( 
+    post_id  INTEGER,
+    text_len  INTEGER,
+    post_date  DATE
+);
+
+Теги (tags)
+CREATE TABLE tags ( 
+    post_id  INTEGER,
+    tag   text
+);
+
+INSERT INTO posts (post_id, text_len, post_date)
+VALUES
+(1, 6799, '09.03.2023'),
+(2, 7800, '12.03.2023'),
+(3, 6907, '19.03.2023'),
+(4, 8890, '22.03.2023'),
+(5, 9802, '30.03.2023');
+
+INSERT INTO tags (post_id, tag)
+VALUES
+(1, 'nofilter'),
+(2, 'happy'),
+(3, 'joy'),
+(4, 'music'),
+(5, 'dark');
+
+SELECT * FROM posts;
+SELECT * FROM tags;
+--Выведите данные по постам, которые длиннее 8000 символов
+SELECT *
+FROM posts
+WHERE text_len >=8000;
+--Выведите id постов, которые отмечены тегами happy или joy.
+SELECT * 
+FROM tags
+WHERE tag = 'happy' OR tag = 'joy';
+--Выведите id постов, которые были размещены до 10 марта 2023
+SELECT *
+FROM posts
+WHERE post_date <= '10.03.2023';
+--Добавьте пост с id 6, сделанный 31 марта 2023, содержащий 10782 символ и отмеченный тегом love 
+--(два INSERT в обе таблицы).
+INSERT INTO posts (post_id, text_len, post_date)
+VALUES (6, 10782, '31.03.2023');
+
+INSERT INTO tags (post_id, tag)
+VALUES (6, 'love');
+--Измените тег для поста с id =5 c dark на live.
+UPDATE tags
+SET tag = 'live'
+WHERE post_id = 5;
+
+УРОК 3.............................................................................
+Общее количество учащихся
+SELECT COUNT(*)
+FROM student;
+
+Определить общее количество учащихся школы
+с уровнем Elementary.
+SELECT COUNT(*)
+FROM student
+WHERE level = ‘Elementary’;
+
+SELECT 'Elementary' AS level,
+       COUNT(*)
+FROM student
+WHERE level = 'Elementary';
+
+Определить общее количество учащихся
+школы для каждого уровня (Elementary,
+Pre-Intermediate и т. д.).
+SELECT level,
+       COUNT(*)
+FROM student
+GROUP BY level;
+
+SELECT education_form, COUNT (*)
+FROM student
+GROUP BY education_form;
+
+SELECT subject_id, COUNT (*)
+FROM student
+GROUP BY subject_id;
+
+Определить общее количество учащихся школы
+для каждого из уровней Elementary, Intermediate.
+SELECT level, COUNT (*)
+FROM student
+WHERE level IN ('Elementary', 'Intermediate')
+GROUP BY level;
+
+Определить общее количество учащихся школы
+для каждого уровня с учетом формы обучения (Elementary, Pre-Intermediate и т. д.) (индивидуальной или в группе).
+SELECT level, education_form, COUNT (*)
+FROM student
+GROUP BY level, education_form;
+
+Важно: индекс — номер колонки в списке SELECT,
+а не в исходной таблице.
+SELECT level, COUNT (*)
+FROM student
+GROUP BY 1;
+
+Среди сгруппированных данных найти уровень, количество учащихся в котором
+равно 2052.
+SELECT level,
+       COUNT(*)
+FROM student
+GROUP BY level
+HAVING COUNT(*) = '2052';
+
+Среди сгруппированных данных найти уровень, количество учащихся в котором
+равно >1000.
+SELECT level,
+       COUNT(*)
+FROM student
+GROUP BY level
+HAVING COUNT(*) > '1000';
+
+Среди сгруппированных данных найти уровень, количество учащихся в котором
+не равно 0.
+SELECT level,
+       COUNT(*)
+FROM student
+GROUP BY level
+HAVING COUNT(*) != '0';
+
+ORDER BY (колонка, по которой хотим отсортировать вывод; необязательно')
+возраст
+SELECT subject_id
+FROM users
+ORDER BY subject_id;
+убывания
+SELECT subject_id
+FROM users
+ORDER BY subject_id DESC;
+
+SELECT subject_id, COUNT(*)
+FROM users
+GROUP BY subject_id
+ORDER BY COUNT DESC;
+
+--Определите количество учеников с уровнем 'Upper-Intermediate' в таблице students.
+SELECT COUNT(*)
+FROM student
+WHERE level = 'Upper-Intermediate';
+--В таблице students определите количество учеников с уровнем 'Upper-Intermediate', занимающихся в группе. Ответ введите в поле.
+SELECT level, education_form, COUNT (*)
+FROM student
+WHERE level IN ('Upper-Intermediate')
+      AND education_form = 'group'
+GROUP BY level, education_form;
+ --В таблице users определите количество учеников, занимающихся по предмету 'Английский язык'(subject_id = 1). Ответ введите в поле.
+SELECT subject_id, COUNT (*)
+FROM users
+WHERE subject_id='1'
+GROUP BY subject_id;
+--Определите id предмета (subject_id), который изучает наименьшее количество пользователей. Таблица для запроса - users.
+--Ответ введите в поле.
+SELECT subject_id, COUNT(*)
+FROM users
+GROUP BY subject_id
+ORDER BY COUNT DESC;
+--Определите наиболее распространенный уровень владения английским языком (level) среди учеников, изучающих английский язык. 
+--Таблица для запроса - student. Ответ введите в поле.
+
+--Напишите id группы, в которой наибольшее количество учеников.
+
+Таблица для запроса - group_student. Ответ введите в поле.
+SELECT group_id, COUNT (*) FROM group_student GROUP BY group_id ORDER BY count DESC LIMIT
+
+
+Домашка 3..........................................................................
+--Найдите общее количество индивидуально обучающихся студентов для каждого уровня.
+SELECT level, COUNT(*)
+FROM student
+WHERE education_form='personal'
+GROUP BY level;
+
+--Найдите общее количество учащихся школы с уровнем Advanced для каждой формы обучения.
+SELECT education_form, COUNT(user_id)
+FROM student
+WHERE level = 'Advanced'
+GROUP BY education_form;
+
+--Найдите общее количество учащихся школы в разрезе уровня и формы обучения, 
+--отсортированных по уровню в порядке возрастания и по форме обучения в порядке убывания.
+SELECT level, education_form, COUNT(*)
+FROM student
+GROUP BY level, education_form
+ORDER BY education_form DESC;
+
+--Найдите максимальное и минимальное id группы (одним запросом).
+SELECT MAX (group_id), MIN (group_id)
+FROM  teacher;
+--Проверяем
+SELECT * FROM teacher
+ORDER BY group_id DESC;
+
+--Найдите количество учеников и id группы, в которой наибольшее количество учеников.
+SELECT COUNT(user_id), group_id 
+FROM group_student gs 
+GROUP BY group_id 
+ORDER BY 1 DESC 
+LIMIT 1
+
+--Доп.часть...............................................................
+CREATE TABLE customers(
+customer_id  INTEGER,
+customer_nm  text);
+
+CREATE TABLE sales (
+sale_id  INTEGER,
+store_id  INTEGER,
+customer_id  INTEGER,
+dt  DATE,
+amt  numeric(10,2));
+
+INSERT INTO customers (customer_id, customer_nm)
+VALUES
+(11, 'жлоб'),
+(17, 'боксер'),
+(23, 'петька'),
+(352, 'чапаев'),
+(1203, 'бубенцы'),
+(23235, 'сталин');
+
+INSERT INTO sales (sale_id, store_id,customer_id, dt, amt)
+VALUES
+(1123, 6729, 11, '19.03.2023', 1235),
+(1456, 6799, 17, '09.04.2023', 12356),
+(2789, 7800, 23, '12.04.2023', 42566),
+(3123, 6907, 352, '19.05.2023', 86652),
+(4456, 8890, 1203, '22.06.2023', 256632),
+(5789, 9802, 23235, '30.07.2023', 522000),
+(11230, 6729, 11, '19.06.2023', 12351),
+(14561, 8890, 17, '09.07.2023', 1235),
+(27895, 6729, 23, '12.08.2023', 425606),
+(31233, 6907, 352, '19.09.2023', 8662),
+(44565, 8890, 1203, '22.11.2023', 2566032),
+(57892, 6799, 23235, '30.12.2023', 52500);
+
+--Выведите максимальную сумму покупки.
+SELECT MAX (amt)
+FROM  sales;
+--Выведите минимальную дату покупки.
+SELECT MIN (amt)
+FROM  sales;
+--Выведите среднюю сумму покупок для customer_id = 352.
+SELECT AVG(amt)
+FROM sales
+WHERE customer_id = 352
+--Выведите минимальную и максимальную сумму покупки, совершенную в магазине с store_id = 3 или покупателем с customer_id = 2.
+SELECT MIN(amt), MAX(amt)
+FROM sales
+WHERE store_id = 3 OR customer_id = 2;
+--Выведите количество уникальных имен покупателей.
+SELECT COUNT(DISTINCT customer_nm)
+FROM customers;
+
+УРОК 4.................................................................................................................
+--Соединение таблиц
+SELECT
+group_student.user_id,
+group_student.group_id,
+teacher.teacher_id,
+teacher.email
+FROM group_student
+INNER JOIN teacher
+ON group_student.group_id = teacher.group_id;
+
+--Соединение с изменением названия
+SELECT s.user_id,
+s.group_id,
+t.teacher_id,
+t.email AS teacher_email
+FROM group_student AS s
+INNER JOIN teacher AS t
+ON s.group_id = t.group_id;
+
+--Найти все группы и учеников в этих группах,в которых преподает учитель с почтой cold@gmail.com.
+SELECT s.user_id,
+s.group_id,
+t.teacher_id,
+t.email AS teacher_email
+FROM group_student AS s
+INNER JOIN teacher AS t
+ON s.group_id = t.group_id
+WHERE t.email = 'cold@gmail.com'; 
+ 
+SELECT * FROM group_student; 
+SELECT * FROM teacher;
+SELECT * FROM users;
+SELECT * FROM subject;
+--Найти все предметы, изучаемые учеником с почтой 'yxunv@gmail.com' При этом должно быть указано название предмета и его id
+SELECT users.user_id,
+teacher.user_email,
+teacher.subject_id,
+teacher.subject_title
+FROM users
+INNER JOIN subject
+ON users.subject_id=subject.subject_id
+WHERE users.user_email='yxunv@gmail.com';
+
+--Вывести данные таким образом, чтобы в одной таблице отображались данные учеников, учебных групп и преподавателей.
+--Дополнительное условие: данные преподавателей не должны быть потеряны после объединения.
+--Левое внешнее соед-е
+SELECT group_student.user_id,
+group_student.group_id,
+teacher.group_id,
+teacher.teacher_id,
+teacher.email
+FROM teacher
+LEFT OUTER JOIN group_student
+ON  group_student.group_id=teacher.group_id
+--Тоже, только с изменением названия
+SELECT s.user_id,
+s.group_id,
+t.group_id,
+t.teacher_id,
+t.email
+FROM teacher AS t
+LEFT OUTER JOIN group_student AS s
+ON  s.group_id = t.group_id;
+--Внутренне соед-е
+SELECT s.user_id,
+s.group_id,
+t.teacher_id,
+t.email AS teacher_email
+FROM group_student AS s 
+INNER JOIN teacher AS t
+ON  s.group_id = t.group_id;
+--Правое внешнее соед-е
+SELECT s.user_id,
+s.group_id,
+t.teacher_id,
+t.email AS teacher_email
+FROM group_student AS s 
+RIGHT OUTER JOIN teacher AS t
+ON  s.group_id = t.group_id;
+--Полное внешнее соединение таблиц (FULL OUTER JOIN)
+SELECT s.user_id,
+s.group_id,
+t.group_id,
+t.teacher_id,
+t.email
+FROM teacher AS t  
+FULL OUTER JOIN group_student AS s
+ON  s.group_id = t.group_id;
+--CROSS JOIN, или декартово произведение таблиц, соединяет
+--каждую строку первой таблицы с каждой строкой второй таблицы.
+SELECT s.user_id,
+s.group_id,
+t.teacher_id,
+t.email
+FROM group_student AS s 
+CROSS JOIN teacher AS t;
+--SELF JOIN соед-е самой с собой
+SELECT s.*,
+t.name AS parent_name
+FROM school_subjet AS s
+SELF JOIN school_subjet AS t
+ON  t.id = s.id;
+--Определите id учеников, которые занимаются в группе у преподавателя с teacher_id = 30239.
+--Таблицы для запроса: group_student и teacher.
+SELECT s.user_id,
+s.group_id,
+t.teacher_id,
+t.email AS teacher_email
+FROM group_student AS s
+INNER JOIN teacher AS t
+ON s.group_id = t.group_id
+WHERE teacher_id = '30239'; 
+--Определите email преподавателя группы, в которой занимается ученик с user_id = 11527.
+--Таблицы для запроса: group_student и teacher.
+SELECT s.user_id,
+s.group_id,
+t.teacher_id,
+t.email AS teacher_email
+FROM group_student AS s
+INNER JOIN teacher AS t
+ON s.group_id = t.group_id
+WHERE user_id = '11527'; 
+--Определите id преподавателя группы, в которой занимается наибольшее количество учеников. 
+--Таблицы для запроса: group_student и teacher.
+SELECT MAX (s.user_id), 
+ s.user_id,
+ s.group_id,
+t.group_id,
+t.teacher_id
+FROM group_student AS s
+JOIN teacher AS t
+ON s.group_id = t.group_id
+GROUP BY  s.user_id,
+s.group_id,
+t.group_id,
+t.teacher_id
+ORDER BY s.user_id DESC 
+LIMIT 1
+
+SELECT * FROM group_student WHERE group_id='170'; 
+SELECT * FROM teacher;
+
+--Воркшоп ........................................................................................
+Таблицы
+CREATE TABLE contract ( 
+    CONTRACT_ID  INTEGER PRIMARY KEY,
+    CONTRACT_NUMBER  NUMERIC(12,0),
+    CONTRACT_STATUS_ID  INTEGER
+);
+CREATE TABLE contract_status ( 
+    CONTRACT_STATUS_ID INTEGER PRIMARY KEY,
+    CONTRACT_STATUS_NAME  VARCHAR
+);
+CREATE TABLE personal_account ( 
+    PERSONAL_ACCOUNT_ID INTEGER  PRIMARY KEY,
+    PERSONAL_ACCOUNT_NUMBER  NUMERIC(9,0)
+);
+CREATE TABLE contract_personal_account ( 
+    CONTRACT_PERSONAL_ACCOUNT_ID INTEGER  PRIMARY KEY,
+    CONTRACT_ID  INTEGER,
+    PERSONAL_ACCOUNT_ID  INTEGER
+);
+Связи таблиц
+ALTER TABLE contract ADD CONSTRAINT CONTRACT_STATUS_ID_fkey 
+FOREIGN KEY (CONTRACT_STATUS_ID) 
+REFERENCES contract_status(CONTRACT_STATUS_ID);
+
+ALTER TABLE contract_personal_account ADD CONSTRAINT CONTRACT_ID_fkey 
+FOREIGN KEY (CONTRACT_ID)
+REFERENCES contract(CONTRACT_ID);
+					
+ALTER TABLE contract_personal_account ADD CONSTRAINT PERSONAL_ACCOUNT_ID_fkey 
+FOREIGN KEY (PERSONAL_ACCOUNT_ID) 
+REFERENCES personal_account(PERSONAL_ACCOUNT_ID);
+
+Наполнение
+INSERT INTO contract_status
+(contract_status_id, contract_status_name)
+VALUES
+(1, 'Открыт'),
+(2, 'Закрыт'),
+(3, 'Блокирован');
+
+INSERT INTO contract(contract_id, contract_number, contract_status_id)
+VALUES
+(1, 177345069033, 1),
+(2, 177345069034, 1),
+(3, 177345069035, 2),
+(4, 177345069036, 1);
+
+INSERT INTO personal_account(personal_account_id, personal_account_number)
+VALUES
+(1, 177369033),
+(2, 177369034),
+(3, 177369035),
+(4, 177369036);
+
+INSERT INTO contract_personal_account(contract_personal_account_id, contract_id, personal_account_id)
+VALUES
+(1, 1, 1),
+(2, 1, 2),
+(3, 2, 4),
+(4, 4, 3);
+
+--Уникальные названия статусов контрактов
+SELECT DISTINCT contract_status_name
+FROM contract_status;
+--Уникальные названия статусов существующих контрактов
+SELECT DISTINCT (CONTRACT_STATUS_NAME)
+FROM contract
+JOIN contract_status ON contract.CONTRACT_STATUS_ID = contract_status.CONTRACT_STATUS_ID
+
+--Уникальные названия статусов существующих контрактов
+SELECT CONTRACT_NUMBER
+FROM contract
+JOIN contract_status ON contract.CONTRACT_STATUS_ID = contract_status.CONTRACT_STATUS_ID
+WHERE CONTRACT_STATUS_NAME = 'Открыт'
+
+--Лицевые счета на контрактах, статус которых «Открыт»
+SELECT PERSONAL_ACCOUNT_NUMBER
+FROM contract
+JOIN contract_status ON contract.CONTRACT_STATUS_ID = contract_status.CONTRACT_STATUS_ID
+JOIN contract_personal_account ON contract_personal_account.CONTRACT_ID = contract.CONTRACT_ID
+JOIN personal_account ON personal_account.PERSONAL_ACCOUNT_ID = contract_personal_account.PERSONAL_ACCOUNT_ID
+WHERE CONTRACT_STATUS_NAME = 'Открыт'
+
+--Количество лицевых счетов для каждого контракта
+SELECT contract.CONTRACT_NUMBER, count(PERSONAL_ACCOUNT_NUMBER)
+FROM contract
+JOIN contract_personal_account ON contract_personal_account.CONTRACT_ID = contract.CONTRACT_ID
+JOIN personal_account ON personal_account.PERSONAL_ACCOUNT_ID = contract_personal_account.PERSONAL_ACCOUNT_ID
+GROUP BY contract.CONTRACT_ID
+
+
+Из ДЗ4
+SELECT s.user_id,
+s.group_id,
+t.teacher_id,
+t.email  AS teacher_email
+FROM group_student AS s
+INNER JOIN teacher AS t
+ON s.group_id = t.group_id
+WHERE t.email = 'blanda.jamil@yahoo.com';
+
+
+--Домашка 4..............................................................................................
+--Найдите учеников и все группы, в которых преподает учитель с почтой blanda.jamil@yahoo.com.
+SELECT s.user_id,
+s.group_id,
+t.teacher_id,
+t.email AS teacher_email
+FROM group_student AS s
+JOIN teacher AS t
+ON s.group_id = t.group_id
+WHERE t.email='blanda.jamil@yahoo.com';
+
+--Выведите уровень ученика с почтой gpagac@jacobs.com.
+SELECT s.user_id,
+s.level,
+u.user_id,
+u.user_email AS Umail
+FROM student AS s
+JOIN users AS u
+ON s.user_id = u.user_id
+WHERE u.user_email='gpagac@jacobs.com'
+ORDER BY s.user_id DESC 
+LIMIT 1;
+--(Немного сложно составлен запрос, достаточно выводить только уровень:)
+SELECT s.level
+FROM users as u 
+INNER JOIN student as s 
+ON u.user_id  = s.user_id  
+WHERE u.user_email = 'gpagac@jacobs.com';
+
+--Выведите уникальные названия предметов, которые изучает ученик c user_id=11300 (таблицы user и subject).
+SELECT DISTINCT subject_title, 
+u.user_id,
+sub.subject_id,
+sub.subject_title
+FROM users AS u
+JOIN subject AS sub
+ON u.subject_id = sub.subject_id
+WHERE user_id='11300';
+--(Верно, но достаточно оставить только название предмета).
+
+--Выведите уникальные уровни учеников, которые занимаются в группе с id = 10.
+SELECT DISTINCT level, 
+g.user_id,
+g.group_id,
+s.user_id,
+s.level
+FROM group_student AS g
+JOIN student AS s
+ON g.user_id = s.user_id
+WHERE group_id='10';
+--(Верно, но достаточно оставить только уровень.)
+
+--Доп.часть...................................................
+--Создание таблиц
+CREATE TABLE positions (
+receipt_number  INTEGER,
+receipt_item_number INTEGER,
+article text,
+pieces INTEGER);
+
+CREATE TABLE products (
+article text,
+product  text,
+category text);
+
+INSERT INTO positions (receipt_number, receipt_item_number, article, pieces)
+VALUES
+(1, 1, 'A1', 1),
+(1, 2, 'A4', 3),
+(1, 3, 'A2', 2),
+(1, 4, 'A10', 1),
+(1, 5, 'A8', 4),
+(2, 1, 'A5', 1),
+(2, 2, 'A7', 1),
+(2, 3, 'A3', 2),
+(3, 1, 'A2', 1),
+(3, 2, 'A9', 1),
+(3, 3, 'A5', 2),
+(3, 4, 'A6', 1),
+(3, 5, 'A3', 3),
+(4, 1, 'A1', 3),
+(4, 2, 'A2', 1),
+(5, 1, 'A2', 1),
+(5, 2, 'A8', 5),
+(5, 3, 'A3', 1),
+(5, 4, 'A4', 1),
+(5, 5, 'A5',1)
+
+
+INSERT INTO products (article, product, category)
+VALUES
+('art', 'product', 'category'),
+('A1', 'кроссовки', 'обувь'),
+('A2', 'кеды', 'обувь'),
+('A3', 'сланцы', 'обувь'),
+('A4', 'куртка', 'одежда'),
+('A5', 'ветровка', 'одежда'),
+('A6', 'шорты', 'одежда'),
+('A7', 'палатка', 'туризм'),
+('A8', 'коврик', 'туризм'),
+('A9', 'спальник', 'туризм'),
+('A10', 'рюкзак', 'туризм'),
+('A11', 'туфли', 'обувь'),
+('A12', 'солнечные_очки', 'аксессуары')
+
+CREATE TABLE positions (
+receipt_number  INTEGER,
+receipt_item_number INTEGER,
+article text,
+pieces INTEGER);
+CREATE TABLE products (
+article text,
+product  text,
+category text);
+SELECT*FROM positions
+SELECT*FROM products 
+
+--Выведите названия категорий, которые были куплены в чеке с id = 3.
+SELECT p.receipt_number,
+p.article,
+pr.article,
+pr.category
+FROM positions AS p
+JOIN products AS pr
+ON p.article =pr.article
+WHERE receipt_number = '3'; 
+
+--Выведите артикулы продуктов, которые не покупали (т. е. они не встречаются ни в одном чеке).
+SELECT p.receipt_number,
+p.article,
+pr.article,
+pr.category
+FROM products AS pr
+JOIN positions AS p
+ON p.article = pr.article
+WHERE receipt_number IS NULL
+
+--Посчитайте количество чеков, в которых куплено больше двух пар одинаковой обуви.
+SELECT COUNT(DISTINCT p.article)
+FROM positions as p 
+WHERE p.pieces > (SELECT AVG(pieces) FROM positions);
+
+--Посчитайте количество чеков, в которых куплено больше двух позиций любой одежды.
+SELECT count(DISTINCT article)
+FROM (SELECT p.* 
+FROM products p
+WHERE category = 'туризм') as t;
+
+-- Создаем таблицу с типами
+CREATE TABLE species_type ( 
+    type_id       INTEGER PRIMARY KEY,
+    type_name     VARCHAR NOT NULL
+);
+
+-- Создаем таблицу с видами
+CREATE TABLE species( 
+    species_id       INTEGER PRIMARY KEY,
+    type_id          INTEGER,
+    species_name     VARCHAR NOT NULL,
+    species_amount   INTEGER,
+    date_start       DATE,
+	  species_status varchar(100) NOT NULL DEFAULT 'active'::character varying,
+    CONSTRAINT species_status_check CHECK (((species_status)::text = ANY (ARRAY[('active'::character varying)::text, ('absent'::character varying)::text, ('fairy'::character varying)::text])))
+);
+
+
+--ФИНАЛЬНОЕ...........................................................................................................
+-- Создаем табицу с местами 
+CREATE TABLE places ( 
+    place_id       INTEGER PRIMARY KEY,
+    place_name     VARCHAR NOT NULL,
+    place_size     NUMERIC(10,2),
+    place_date_start  TIMESTAMP NOT NULL DEFAULT CURRENT_DATE
+);
+
+-- Создаем таблицу с распределеним видов по местам
+CREATE TABLE species_in_places ( 
+    place_id      INTEGER,
+    species_id     INTEGER,
+    PRIMARY KEY (place_id, species_id)
+);
+
+commit;
+
+-- Создаем связи между таблицами
+
+ALTER TABLE species ADD CONSTRAINT type_id_fkey FOREIGN KEY (type_id) REFERENCES species_type(type_id);
+ALTER TABLE species_in_places ADD CONSTRAINT place_id_fkey FOREIGN KEY (place_id) REFERENCES places(place_id);
+ALTER TABLE species_in_places ADD CONSTRAINT species_id_fkey FOREIGN KEY (species_id) REFERENCES species(species_id);
+
+--Вариант 2 (заполнение скриптом)
+
+--Добавление типов 
+INSERT INTO species_type (type_id, type_name)
+VALUES
+(1, 'человек'),
+(2, 'животные'),
+(3, 'птицы'),
+(4, 'рыбы'),
+(5, 'цветы'),
+(6, 'фрукты'),
+(7, 'ягоды');
+
+--Добавление мест
+INSERT INTO places (place_id, place_name, place_size, place_date_start)
+VALUES
+(1, 'дом', 120.00, '2010-04-12 10:00:00.000'),
+(2, 'сарай', 200.00, '2011-05-30 15:30:00.000'),
+(3, 'сад', 350.00, '2010-04-12 12:35:15.000'),
+(4, 'лес', 0.00, '1900-01-01 00:00:00.000'),
+(5, 'река', 0.00, '1900-01-01 00:00:01.000');
+
+--Добавление видов
+INSERT INTO species (species_id, type_id, species_name, species_amount, date_start, species_status)
+VALUES
+(1, 1, 'малыш', 20, '2022-10-04', 'active'),
+(2, 1, 'мужчина', 40, '2010-04-12', 'active'),
+(3, 1, 'женщина', 42, '2010-04-12', 'active'),
+(4, 2, 'собака', 30, '2010-05-30', 'active'),
+(5, 2, 'кошка', 10, '2022-10-04', 'active'),
+(6, 2, 'лошадь', 50, '2010-04-12', 'active'),
+(7, 2, 'единорог', 1, '2010-04-12', 'fairy'),
+(8, 2, 'лиса', 5, '2010-04-12', 'active'),
+(9, 2, 'волк', 0, '2010-04-12', 'absent'),
+(10, 2, 'скунс', 2, '2010-04-12', 'active'),
+(11, 2, 'обезьяна', 6, '2023-04-10', 'active'),
+(12, 3, 'попугай', 15, '2020-01-01', 'active'),
+(13, 3, 'соловей', 7, '2010-04-12', 'active'),
+(14, 3, 'дятел', 4, '2010-04-12', 'active'),
+(15, 3, 'сова', 10, '2010-04-12', 'active'),
+(16, 4, 'голубая рыба', 2, '2010-04-12', 'active'),
+(17, 5, 'подсолнух', 1000, '2010-04-12', 'active'),
+(18, 5, 'роза', 2000, '2010-04-12', 'active'),
+(19, 5, 'тюльпан', 1500, '2010-04-12', 'active'),
+(20, 6, 'яблоко', 0, '2010-04-12', 'absent'),
+(21, 6, 'груша', 13, '2010-04-12', 'active'),
+(22, 6, 'слива', 11, '2010-04-12', 'active'),
+(23, 7, 'клубника', 30, '2010-04-12', 'active'),
+(24, 7, 'вишня', 7, '2010-04-12', 'active');
+
+--Добавление расположения видов по местам
+INSERT INTO species_in_places (place_id, species_id)
+VALUES(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(2, 6),
+(4, 8),
+(4, 9),
+(4, 10),
+(1, 11),
+(1, 12),
+(4, 13),
+(4, 14),
+(4, 15),
+(5, 16),
+(3, 17),
+(3, 18),
+(3, 19),
+(3, 20),
+(4, 20),
+(3, 21),
+(3, 22),
+(3, 23),
+(3, 24);
+
+SELECT  MAX (place_size) FROM places
+SELECT  * FROM species
+SELECT  * FROM species_type
+SELECT  * FROM species_in_places 
+
+--ЗАДАНИЕ 1
+--Составьте запрос, который выведет имя вида с наименьшим id. Результат будет соответствовать букве «М=МАЛЫШ».
+SELECT species_id, species_name
+FROM  species
+ORDER BY species_id
+
+--Составьте запрос, который выведет имя вида с количеством представителей более 1800. 
+--Результат будет соответствовать букве «Б=РОЗА».
+SELECT *
+FROM  species
+WHERE species_amount > '1800'
+
+--Составьте запрос, который выведет имя вида, начинающегося на «п» и относящегося к типу с type_id = 5. 
+--Результат будет соответствовать букве «О=ПОДСОЛНУХ».
+SELECT *
+FROM  species
+WHERE type_id = '5' AND species_name LIKE 'п%'
+
+--Составьте запрос, который выведет имя вида, заканчивающегося на «са» или количество представителей которого равно 5. 
+--Результат будет соответствовать букве В=ЛИСА.
+SELECT *
+FROM  species
+WHERE species_amount=5 AND species_name LIKE '%са'
+
+SELECT *
+FROM  species
+WHERE species_name LIKE '%са'
+
+--ЗАДАНИЕ 2
+--Составьте запрос, который выведет имя вида, появившегося на учете в 2023 году. Результат будет соответствовать букве 
+--«Ы=ОБЕЗЬЯНА».
+SELECT *
+FROM  species
+WHERE to_char (date_start, 'YYYY')= '2023'
+
+--Составьте запрос, который выведет названия отсутствующего (status = absent) вида, расположенного вместе с place_id = 3. 
+--Результат будет соответствовать букве «С=ЯБЛОКО».
+SELECT *
+FROM  species
+JOIN species_in_places
+ON species_in_places.species_id=species.species_id
+WHERE species_status = 'absent' AND place_id = 3
+
+--Составьте запрос, который выведет название вида, расположенного в доме и появившегося в мае, а также и количество 
+--представителей вида. Название вида будет соответствовать букве «П=СОБАКА».
+SELECT places.place_id,
+species.species_name,
+species_in_places.place_id,
+places.place_name,
+species.date_start
+FROM  species
+JOIN species_in_places
+ON species_in_places.species_id=species.species_id
+JOIN places ON places.place_id=species_in_places.place_id
+WHERE to_char (date_start, 'MM')= '05' AND place_name='дом'		
+
+--Составьте запрос, который выведет название вида, состоящего из двух слов (содержит пробел). 
+--Результат будет соответствовать знаку !=ГОЛУБАЯ РЫБА.
+SELECT *
+FROM  species
+WHERE species_name LIKE '%_ _%'		
+
+--ЗАДАНИЕ 3
+--Составьте запрос, который выведет имя вида, появившегося с малышом в один день. 
+--Результат будет соответствовать букве «Ч=КОШКА».
+SELECT date_start, species_name
+FROM  species
+WHERE date_start='2022-10-04'
+GROUP BY date_start, species_name
+
+--Составьте запрос, который выведет название вида, расположенного в здании с наибольшей площадью.
+--Результат будет соответствовать букве «Ж=ЛОШАДЬ».
+SELECT places.place_size, species.species_name
+FROM places
+JOIN species_in_places
+ON species_in_places.place_id=places.place_id
+JOIN species ON species.species_id=species_in_places.species_id
+GROUP BY species_name, place_size
+ORDER BY place_size DESC;
+
+SELECT s.species_name, p.place_size
+FROM species AS s
+JOIN species_in_places AS sp
+ON s.species_id = sp.species_id
+JOIN places AS p
+ON sp.place_id = p.place_id
+WHERE p.place_id = 1 OR p.place_id = 2
+ORDER BY p.place_size DESC
+LIMIT 1;
+
+--Составьте запрос/запросы, которые найдут название вида, относящегося к 5-й по численности группе проживающей дома.
+--Результат будет соответствовать букве «Ш=ЖЕНЩИНА».
+SELECT species.species_name,
+species.species_amount,
+species.species_id,
+places.place_name
+FROM places
+JOIN species_in_places ON places.place_id=species_in_places.place_id
+JOIN species ON species_in_places.species_id=species.species_id
+WHERE places.place_id='1'
+ORDER BY species_amount DESC;
+
+--Составьте запрос, который выведет сказочный вид (статус fairy), не расположенный ни в одном месте. 
+--Результат будет соответствовать букве «Т=ЕДИНОРОГ».
+SELECT *
+FROM species
+WHERE species_status ='fairy'
+
+SELECT s.species_name
+FROM species s
+LEFT JOIN species_in_places sip  ON s.species_id = sip.species_id  
+WHERE s.species_status = 'fairy'
+AND sip.place_id is null
