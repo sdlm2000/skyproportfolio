@@ -8,6 +8,10 @@
 - :zap: Являюсь студентом на курсе "Профессия Инженер по тестированию" в SkyPro.
 - :mailbox: Как связаться со мной: [![Telegram Badge](https://img.shields.io/badge/-Алексей_Седов-blue?style=flat&logo=Telegram&logoColor=white)](https://t.me/f1llzzz) [![Gmail Badge](https://img.shields.io/badge/-Gmail-red?style=flat&logo=Gmail&logoColor=white)](aleksejjsdv@gmail.com)
 
+### 🤝 Социальные сети:
+<a href="https://vk.com/id16766000" target="_blank">
+      <img src="https://cdn-icons-png.flaticon.com/512/145/145813.png" width="40" height="40" alt="VK Badge"/>
+    </a>
 ---
 ## Навыки и технологии
 ``Jira``,``qase.io``,``SQL``,`` Postman``,``Fiddler``, ``Swagger``, ``Trello``, <br>
